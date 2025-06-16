@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap');
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      overflow-x: hidden;
+    }
+
+    .letter {
+      opacity: 0;
+      transform: translateY(40px);
+      animation: slideIn 0.6s forwards;
+    }
+
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-950 to-black text-white min-h-screen flex flex-col">
+
+  <!-- Transparent Navbar -->
+  <nav class="fixed top-0 w-full z-50 bg-white/10 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="text-2xl font-extrabold tracking-wide text-white">🌟 Welcome</div>
+      <div>
+        <% if (!user) { %>
+          <a href="/login" class="text-indigo-300 hover:text-indigo-500 px-4 font-medium transition">Login</a>
+          <a href="/register" class="text-indigo-300 hover:text-indigo-500 px-4 font-medium transition">Sign Up</a>
+        <% } else { %>
+          <a href="/profile" class="text-indigo-300 hover:text-indigo-500 px-4 font-medium transition">Hi, <%= user.username %></a>
+          <a href="/logout" class="text-red-500 hover:text-red-700 px-4 font-medium transition">Logout</a>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="flex-1 flex flex-col justify-center items-center text-center px-6">
+    <h1 id="animatedText" class="text-5xl sm:text-6xl font-extrabold tracking-wider leading-snug mb-6 text-white">
+      <!-- Letters will appear here -->
+    </h1>
+    <p class="text-zinc-400 text-lg sm:text-xl mb-12 max-w-xl">Explore posts, share your thoughts, and connect with others.</p>
+    <a href="/posts" class="bg-indigo-600 hover:bg-indigo-700 transition px-6 py-3 rounded-full text-white font-semibold shadow-lg shadow-indigo-500/30">View Posts</a>
+  </section>
+
+  <script>
+    const text = "Welcome to the Coolest Posts App!";
+    const container = document.getElementById("animatedText");
+
+    [...text].forEach((char, i) => {
+      const span = document.createElement("span");
+      span.textContent = char;
+      span.className = "letter";
+      span.style.animationDelay = `${i * 0.05}s`;
+      container.appendChild(span);
+    });
+  </script>
+
+</body>
+</html>

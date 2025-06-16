@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>View Posts</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap');
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+      margin: 0;
+      min-height: 100vh;
+      color: white;
+    }
+
+    .card {
+      background: rgba(31, 41, 55, 0.8); /* bg-gray-800/80 */
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgb(124 58 237 / 0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgb(124 58 237 / 0.7);
+    }
+
+    .post-image {
+      border-top-left-radius: 1rem;
+      border-top-right-radius: 1rem;
+      max-height: 220px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .post-content {
+      padding: 1rem 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .post-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #d8b4fe; /* indigo-300 */
+    }
+
+    .post-text {
+      flex-grow: 1;
+      color: #cbd5e1; /* zinc-300 */
+      margin-bottom: 1rem;
+      white-space: pre-line;
+      line-height: 1.5;
+    }
+
+    .post-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: #94a3b8; /* gray-400 */
+    }
+
+    /* Scroll container for posts */
+    .posts-container {
+      max-width: 1200px;
+      margin: 4rem auto 6rem;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Transparent Navbar -->
+  <nav class="fixed w-full top-0 left-0 bg-black bg-opacity-30 backdrop-blur-md border-b border-gray-700 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center text-white">
+      <div class="font-extrabold text-2xl tracking-wide">🚀 PostsApp</div>
+      <div class="space-x-4">
+        <% if (!user) { %>
+          <a href="/login" class="hover:text-indigo-400 transition">Login</a>
+          <a href="/register" class="hover:text-indigo-400 transition">Sign Up</a>
+        <% } else { %>
+          <a href="/profile" class="hover:text-indigo-400 transition">Hi, <%= user.username %></a>
+          <a href="/logout" class="text-red-500 hover:text-red-700 transition">Logout</a>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+
+  <main class="posts-container" style="padding-top: 5.5rem;">
+
+    <% if(posts && posts.length > 0) { %>
+      <% posts.forEach(post => { %>
+        <article class="card" tabindex="0" aria-label="Post titled <%= post.title %>">
+
+          <% if(post.imageUrl) { %>
+            <img src="<%= post.imageUrl %>" alt="Image for <%= post.title %>" class="post-image" />
+          <% } %>
+
+          <div class="post-content">
+            <h2 class="post-title"><%= post.title %></h2>
+            <p class="post-text"><%= post.content.length > 200 ? post.content.substring(0, 200) + '...' : post.content %></p>
+            <div class="post-footer">
+              <span>By: <%= post.user?.username || 'Unknown' %></span>
+              <span><time datetime="<%= post.createdAt.toISOString() %>"><%= new Date(post.createdAt).toLocaleDateString() %></time></span>
+              <span>❤️ <%= post.likes.length %></span>
+            </div>
+          </div>
+
+        </article>
+      <% }) %>
+    <% } else { %>
+      <p class="text-center text-gray-400 w-full col-span-full mt-20 italic text-xl">No posts to show. Be the first to create one!</p>
+    <% } %>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Exists Error</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap');
+    body {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    @keyframes fade-in-up {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fade-in-up {
+      animation: fade-in-up 0.6s ease-out;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-black min-h-screen flex items-center justify-center text-white">
+
+  <div class="bg-gray-800/60 backdrop-blur-xl border border-red-500 shadow-2xl rounded-3xl p-10 w-full max-w-md animate-fade-in-up text-center">
+    <h1 class="text-4xl font-extrabold text-red-500 mb-4">Error</h1>
+    <p class="text-lg text-gray-200">User already exists. Please try logging in or use a different email address.</p>
+
+    <a href="/" class="mt-6 inline-block text-sm text-indigo-400 hover:underline">
+      ← Go Back to Sign Up
+    </a>
+  </div>
+
+</body>
+</html>

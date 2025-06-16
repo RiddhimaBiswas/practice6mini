@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap');
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background: black;
+    }
+
+    .letter {
+      opacity: 0;
+      transform: translateY(40px);
+      animation: slideIn 0.6s forwards;
+    }
+
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Parallax stars background */
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: url('/stars.png') repeat;
+      animation: moveStars 100s linear infinite;
+      z-index: -1;
+      opacity: 0.2;
+    }
+
+    @keyframes moveStars {
+      0% { background-position: 0 0; }
+      100% { background-position: 10000px 10000px; }
+    }
+
+    .scroll-down {
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+
+    .card {
+      transform: perspective(1000px) rotateX(5deg);
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .card:hover {
+      transform: perspective(1000px) rotateX(0);
+      box-shadow: 0 25px 50px rgba(124, 58, 237, 0.5);
+    }
+  </style>
+</head>
+<body class="text-white">
+
+  <!-- Parallax background -->
+  <div class="stars"></div>
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 w-full z-50 bg-white/10 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="text-2xl font-extrabold tracking-wide text-white">🚀 Riddhima</div>
+      <div>
+        <% if (!user) { %>
+          <a href="/login" aria-label="Login" class="text-indigo-300 hover:text-indigo-500 px-4 font-medium transition">Login</a>
+          <a href="/register" aria-label="Sign Up" class="text-indigo-300 hover:text-indigo-500 px-4 font-medium transition">Sign Up</a>
+        <% } else { %>
+          <a href="/profile" aria-label="User Profile" class="text-indigo-300 hover:text-indigo-500 px-4 font-medium transition">Hi, <%= user.username %></a>
+          <a href="/logout" aria-label="Logout" class="text-red-500 hover:text-red-700 px-4 font-medium transition">Logout</a>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="h-screen flex flex-col justify-center items-center text-center px-6 pt-20">
+    <h1 id="animatedText" class="text-5xl sm:text-6xl font-extrabold tracking-wider leading-snug mb-6 text-white" aria-label="Welcome to the My RidApp">
+      <!-- JS inserts animated letters here -->
+    </h1>
+    <p class="text-zinc-400 text-lg sm:text-xl mb-12 max-w-xl">Share your thoughts, browse creativity & inspire others.</p>
+    <a href="#posts" aria-label="Start Exploring Posts" class="bg-indigo-600 hover:bg-indigo-700 transition px-6 py-3 rounded-full text-white font-semibold shadow-lg shadow-indigo-500/30">Start Exploring</a>
+
+    <div class="mt-16 scroll-down text-indigo-400 text-sm flex flex-col items-center">
+      <span>Scroll</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Posts Section -->
+  <section id="posts" class="bg-black/80 backdrop-blur-lg p-6 sm:p-10 min-h-screen">
+    <h2 class="text-3xl font-extrabold mb-8 text-center">📝 Your Posts</h2>
+
+    <% if (posts && posts.length > 0) { %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% posts.forEach(post => { %>
+          <div class="card bg-gray-900/70 rounded-2xl p-5 shadow-lg border border-gray-700 hover:border-indigo-600 transition duration-300">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-xl font-bold break-words"><%= post.title %></h3>
+              <span class="text-xs text-gray-400 italic whitespace-nowrap">by <%= post.user && post.user.username ? post.user.username : "You" %></span>
+            </div>
+            <% if (post.imageUrl) { %>
+              <img src="<%= post.imageUrl %>" alt="Image for <%= post.title %>" class="rounded-lg w-full h-40 object-cover mb-3" />
+            <% } %>
+            <p class="text-sm text-gray-300 mb-4 break-words"><%= post.content %></p>
+            <div class="flex justify-between items-center text-gray-400 text-xs">
+              <span><%= new Date(post.createdAt).toLocaleDateString() %></span>
+              <span>❤️ <%= post.likes.length %></span>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p class="text-center text-gray-500 italic mt-10">No posts yet. Create your first one!</p>
+    <% } %>
+  </section>
+
+  <script>
+    const text = "Welcome to the My RidApp!";
+    const container = document.getElementById("animatedText");
+    [...text].forEach((char, i) => {
+      const span = document.createElement("span");
+      span.textContent = char;
+      span.className = "letter";
+      span.style.animationDelay = `${i * 0.05}s`;
+      container.appendChild(span);
+    });
+  </script>
+
+</body>
+</html>
